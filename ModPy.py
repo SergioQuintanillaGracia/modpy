@@ -7,4 +7,9 @@ root.geometry("800x500")
 print("not main branch")
 
 
+print("this is the main branch")
+
+def mainbranch():
+    print("lol main")
+
 root.mainloop()
