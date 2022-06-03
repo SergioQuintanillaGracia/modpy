@@ -5,6 +5,6 @@ root.title("ModPy Alpha 0.1")
 root.geometry("800x500")
 
 
-print("test2")
+among_us()
 
 root.mainloop()
