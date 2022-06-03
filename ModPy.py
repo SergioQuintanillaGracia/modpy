@@ -18,10 +18,10 @@ def create_button_panel():
     button_panel_frame = Frame(root, width = 350 - widget_offset_x * 2, height = 60, highlightbackground="#afafaf", highlightthickness=1)
     button_panel_frame.place(in_ = root, x = widget_offset_x, y = widget_offset_y)
 
+    plus_sign_image = ImageTk.PhotoImage(Image.open("images/plus_sign.png"))
     add_button = Button(
-        text = "+",
         font = ("Arial", 55),
-        image = virtualPixel, compound = "c",
+        image = plus_sign_image, compound = "c",
         width = 60 - widget_offset_x * 4 + 2,
         height = 60 - widget_offset_x * 4 + 2,
         command = print)
