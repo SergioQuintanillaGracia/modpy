@@ -9,7 +9,6 @@ root.resizable(False, False)  #Make it so you can't resize it
 
 #Change the theme to get different colors
 theme = "discord dark"
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
 if theme == "light":
     bg_color = "#f0f0f0"
