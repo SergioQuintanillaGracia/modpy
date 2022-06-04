@@ -11,7 +11,6 @@ root.resizable(False, False)  #Make it so you can't resize it
 theme = "discord dark"
 
 if theme == "light":
-    among us,
     bg_color = "#f0f0f0"
     button_bg_color = "#c3c3c3"
     button_fg_color = "#000000"
@@ -89,6 +88,8 @@ def create_button_panel_widgets():
 
     settings_button = Button(
         relief = "flat",
+        bg = button_bg_color,
+        activebackground = button_active_bg_color,
         image = settings_cog,
         command = print)
     settings_button.place(in_ = button_panel_frame, x = 283, y = widget_offset_y - 2)
