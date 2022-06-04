@@ -89,8 +89,6 @@ def create_button_panel_widgets():
 
     settings_button = Button(
         relief = "flat",
-        bg = button_bg_color,
-        activebackground = button_active_bg_color,
         image = settings_cog,
         command = print)
     settings_button.place(in_ = button_panel_frame, x = 283, y = widget_offset_y - 2)
