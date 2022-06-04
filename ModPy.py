@@ -1,3 +1,4 @@
+from functools import partial
 from pickle import NONE
 from tkinter import Tk, Button, Label, Frame
 from PIL import ImageTk, Image
@@ -104,8 +105,10 @@ def create_modpack_list_structure():
 
 
 
-#This list will hold every modpack that has been saved by the user
+#This list holds the name of every modpack that has been saved by the user
 modpacks_saved = []
+#This list holds every label objects that are used to show the modpacks
+modpack_labels = []
 
 
 def load_modpacks():
@@ -124,16 +127,71 @@ def show_modpacks():
     global modpack_list_frame
 
     for modpack in modpacks_saved:
-        modpack_label = Label(modpack_list_frame,
-            text = modpack,
-            font = ("Arial", 14),
-            anchor = "w",
-            bg = label_bg_color,
-            fg = fg_color,
-            image = virtualPixel, compound = "c",
-            width = 318,
-            height = 26)
-        modpack_label.pack(padx = widget_offset_x, pady = widget_offset_y / 2)
+        current_position = modpacks_saved.index(modpack)  #Current modpack position in the list (index)
+
+        #Add a label to the modpack_labels list
+        modpack_labels.append(
+            Label(modpack_list_frame,
+                text = modpack,
+                font = ("Arial", 14),
+                anchor = "w",
+                bg = label_bg_color,
+                fg = fg_color,
+                image = virtualPixel, compound = "c",
+                width = 318,
+                height = 26
+                ))
+            
+        current_label = modpack_labels[current_position]  #Current label, the one we have to pack and bind a key to
+
+        current_label.pack(padx = widget_offset_x, pady = widget_offset_y / 2)
+        
+        #We have to use partial() to call the function with arguments and not lambda because with lambda it won't work well,
+        #it will use the last value of the arguments and not the one in the loop where the label is created
+        current_label.bind("<Button-1>", partial(create_modpack_buttons, current_label, str(current_position)))
+
+
+def create_modpack_buttons(label, modpack, x):  #We use x as an argument because partial() needs an extra argument
+    print("Modpack " + modpack)  #DEBUG LINE
+
+    install_button = Button(label,
+        text = "Install",
+        font = ("Arial", 12, "bold"),
+        bg = button_bg_color,
+        fg = fg_color,
+        activebackground = button_active_bg_color,
+        activeforeground = button_active_foreground_color,
+        image = virtualPixel, compound = "c",
+        width = 45,
+        height = 18,
+        command = lambda: print(f"{modpack} - install"))
+    install_button.place(in_ = label, x = 168, y = 1)
+
+    options_button = Button(label,
+        text = "Options",
+        font = ("Arial", 12, "bold"),
+        bg = button_bg_color,
+        fg = fg_color,
+        activebackground = button_active_bg_color,
+        activeforeground = button_active_foreground_color,
+        image = virtualPixel, compound = "c",
+        width = 58,
+        height = 18,
+        command = lambda: print(f"{modpack} - options"))
+    options_button.place(in_ = label, x = 224, y = 1)
+
+    delete_button = Button(label,
+        text = "✖",
+        font = ("Arial", 19),
+        bg = button_bg_color,
+        fg = "#ff0000",
+        activebackground = button_active_bg_color,
+        activeforeground = button_active_foreground_color,
+        image = virtualPixel, compound = "c",
+        width = 18,
+        height = 18,
+        command = lambda: print(f"{modpack} - delete"))
+    delete_button.place(in_ = label, x = 293, y = 1)
 
 
 
