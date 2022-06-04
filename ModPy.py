@@ -1,16 +1,17 @@
-from tkinter import *
+from tkinter import Tk, Button, Label, Frame
 from PIL import ImageTk, Image
+import settings as s
 
 root = Tk()
 root.title("ModPy Beta 1")
 root.geometry("350x500")  #Resolution of the window
 root.resizable(False, False)  #Make it so you can't resize it
 
-
 #Change the theme to get different colors
 theme = "discord dark"
 
 if theme == "light":
+    print("Theme set to \"light\"")
     bg_color = "#f0f0f0"
     button_bg_color = "#c3c3c3"
     button_fg_color = "#000000"
@@ -23,6 +24,7 @@ if theme == "light":
     virtualPixel = ImageTk.PhotoImage(Image.open("images/virtualPixel_light.png"))
 
 if theme == "discord dark":
+    print("Theme set to \"discord dark\"")
     bg_color = "#36393f"
     button_bg_color = bg_color
     button_fg_color = "#d2d3d5"
@@ -91,7 +93,7 @@ def create_button_panel_widgets():
         bg = button_bg_color,
         activebackground = button_active_bg_color,
         image = settings_cog,
-        command = print)
+        command = lambda a: s.open_settings_window(theme))
     settings_button.place(in_ = button_panel_frame, x = 283, y = widget_offset_y - 2)
 
 
