@@ -109,16 +109,19 @@ def create_modpack_list_structure():
 modpacks_saved = []
 #This list holds every label objects that are used to show the modpacks
 modpack_labels = []
+#This list holds every button created when clicking a modpack. It is used to delete every created button
+#when the user clicks a modpack, so there are not multiple sets of buttons at the same time in different modpacks.
+created_modpack_buttons = []
 
 
 def load_modpacks():
     #This function will save every modpack that the user has saved in the modpacks_saved list.
     #At the moment, this is just a placeholder so I can continue working on the program.
     #This functionality will be implemented in the future.
+    modpacks_saved.append("Test 0 modpack")
     modpacks_saved.append("Test 1 modpack")
     modpacks_saved.append("Test 2 modpack")
     modpacks_saved.append("Test 3 modpack")
-    modpacks_saved.append("Test 4 modpack")
     
 
 def show_modpacks():
@@ -153,6 +156,9 @@ def show_modpacks():
 
 def create_modpack_buttons(label, modpack, x):  #We use x as an argument because partial() needs an extra argument
     print("Modpack " + modpack)  #DEBUG LINE
+
+    #Delete every other button created next to a modpack name
+    destroy_modpack_buttons()
 
     install_button = Button(label,
         text = "Install",
@@ -193,6 +199,14 @@ def create_modpack_buttons(label, modpack, x):  #We use x as an argument because
         command = lambda: print(f"{modpack} - delete"))
     delete_button.place(in_ = label, x = 293, y = 1)
 
+    created_modpack_buttons.append(install_button)
+    created_modpack_buttons.append(options_button)
+    created_modpack_buttons.append(delete_button)
+
+
+def destroy_modpack_buttons(x = 0):
+    for button in created_modpack_buttons:
+        button.destroy()
 
 
 create_button_panel_widgets()
