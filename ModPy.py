@@ -11,6 +11,7 @@ root.resizable(False, False)  #Make it so you can't resize it
 theme = "discord dark"
 
 if theme == "light":
+    among us,
     bg_color = "#f0f0f0"
     button_bg_color = "#c3c3c3"
     button_fg_color = "#000000"
