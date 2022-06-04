@@ -1,8 +1,15 @@
 from tkinter import Tk, Button, Toplevel
+from PIL import ImageTk, Image
+from dark_title_bar import *
 
 def open_settings_window(theme):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
+
+    root = Toplevel()
+    root.title("Settings")
+    root.geometry("250x250")
+
     if theme == "light":
         print("Theme set to \"light\"")
         bg_color = "#f0f0f0"
@@ -18,6 +25,10 @@ def open_settings_window(theme):
 
     if theme == "discord dark":
         print("Theme set to \"discord dark\"")
+        try:
+            dark_title_bar(root)
+        except: print("Dark title bar is not supported by this computer")
+    
         bg_color = "#36393f"
         button_bg_color = bg_color
         button_fg_color = "#d2d3d5"
@@ -30,9 +41,7 @@ def open_settings_window(theme):
         virtualPixel = ImageTk.PhotoImage(Image.open("images/virtualPixel_discord_dark.png"))
 
 
-    root = Toplevel()
-    root.title("Settings")
-    root.geometry("250x250")
+    root.configure(bg = bg_color)
 
 
     root.mainloop()

@@ -1,5 +1,8 @@
 from tkinter import Tk, Button, Label, Frame
 from PIL import ImageTk, Image
+import os
+from dark_title_bar import *
+
 import settings as s
 
 root = Tk()
@@ -9,6 +12,8 @@ root.resizable(False, False)  #Make it so you can't resize it
 
 #Change the theme to get different colors
 theme = "discord dark"
+config_folder = "config/"
+mods_folder = str(os.getenv("APPDATA")) + "/.minecraft/mods/"
 
 if theme == "light":
     print("Theme set to \"light\"")
@@ -25,6 +30,10 @@ if theme == "light":
 
 if theme == "discord dark":
     print("Theme set to \"discord dark\"")
+    try:
+        dark_title_bar(root)
+    except: print("Dark title bar is not supported by this computer")
+
     bg_color = "#36393f"
     button_bg_color = bg_color
     button_fg_color = "#d2d3d5"
@@ -43,6 +52,9 @@ root.configure(bg = bg_color)
 #Frame offset variables are used to separate the frames from the edges of the window
 widget_offset_x = 6
 widget_offset_y = widget_offset_x
+
+
+dark_title_bar(root)
 
 
 def create_button_panel_widgets():
@@ -75,7 +87,7 @@ def create_button_panel_widgets():
         command = print)
     remove_button.place(in_ = button_panel_frame, x = 58, y = widget_offset_y)
 
-    import_from_file_button = Button(
+    import_from_file_button = Button(button_panel_frame,
         text = "Import from file",
         font = ("Arial", 14),
         bg = button_bg_color,
@@ -93,13 +105,15 @@ def create_button_panel_widgets():
         bg = button_bg_color,
         activebackground = button_active_bg_color,
         image = settings_cog,
-        command = lambda a: s.open_settings_window(theme))
+        command = lambda : s.open_settings_window(theme))
     settings_button.place(in_ = button_panel_frame, x = 283, y = widget_offset_y - 2)
 
 
 def create_modpack_list_widgets():
     modpack_list_frame = Frame(root, width = 350 - widget_offset_x * 2, height = 422, bg = frame_bg_color, highlightbackground = "#afafaf", highlightthickness=1)
     modpack_list_frame.place(in_ = root, x = widget_offset_x, y = widget_offset_y + 60 + widget_offset_y)
+
+    #TODO: Add the code to create the modpack list
 
 
 create_button_panel_widgets()
