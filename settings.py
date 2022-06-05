@@ -9,7 +9,6 @@ settings_file = "settings/settings.txt"
 def set_up_window(theme):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
-    global settings
 
     root = Toplevel()
     root.title("Settings")
@@ -76,11 +75,11 @@ def get_user_settings():
             key_value = i.split(" = ")
 
             #If, by new line errors, various lines are together, raise an error and load the default settings
-            if key_value.len() != 2:
+            if len(key_value) != 2:
                 raise
 
-            settings[key_value[0]] = key_value[1]
-            
+            settings[key_value[0]] = key_value[1].strip()  #We use strip to remove any \n characters
+
     except:
         get_default_settings()
         save_current_settings()
@@ -94,6 +93,8 @@ def get_default_settings():
         "mods_folder":"C:/Users/sergi/AppData/Roaming/.minecraft/mods",  #TODO: Make this user independent
         "theme":"light"
     }
+
+    print("Default settings applied")
     
     return settings
 
