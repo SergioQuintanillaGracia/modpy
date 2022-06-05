@@ -167,8 +167,7 @@ def show_modpacks():
                 fg = fg_color,
                 image = virtualPixel, compound = "c",
                 width = 318,
-                height = 26
-                ))
+                height = 26))
             
         current_label = modpack_labels[current_position]  #Current label, the one we have to pack and bind a key to
 
@@ -247,14 +246,14 @@ def modpack_scroll(event):
         last_label = modpack_labels[-1]
 
         if event.delta > 0:
-            y_increment = 20 * scroll_sensibility
+            y_increment = 25 * scroll_sensibility
             #Top limit for the labels:
             #If the first label will go over the top when we add the scroll value, move it to the top and not more
             if first_label.winfo_y() + y_increment > 0:
                 y_increment = -first_label.winfo_y() + 3  #The 3 (removed) is for the spacing between the frame and the label
 
         elif event.delta < 0:
-            y_increment = -20 * scroll_sensibility
+            y_increment = -25 * scroll_sensibility
             #Bottom limit for the labels:
             #If the last label will go down the bottom when we add the scroll value, move it to the bottom and not more
             if last_label.winfo_y() + y_increment < 412:
