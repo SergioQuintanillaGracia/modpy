@@ -13,7 +13,7 @@ root.geometry("350x520")  #Resolution of the window
 root.resizable(False, False)  #Make it so you can't resize it
 
 #Change the theme to get different colors
-theme = "light"
+theme = "discord dark"
 config_folder = "config/"
 mods_folder = str(os.getenv("APPDATA")) + "/.minecraft/mods/"
 
@@ -42,6 +42,7 @@ if theme == "discord dark":
     fg_color = "#d2d3d5"
     button_active_bg_color = button_bg_color
     button_active_foreground_color = fg_color
+    label_bg_color = "#40444b"
     frame_bg_color = "#2f3136"
     highlightbackground_color = "#8a8a8a"
     settings_cog = ImageTk.PhotoImage(Image.open("images/settings_cog_discord_dark.png"))
