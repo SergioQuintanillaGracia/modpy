@@ -227,21 +227,34 @@ def destroy_modpack_buttons(x = 0):
 
 
 def modpack_scroll(event):
-    print("Scrolled",event.delta)  #Debug
-
-    scroll_sensibility = 0.3
+    scroll_sensibility = 1
 
     for i in modpack_labels:
         current_x = i.winfo_x() - 1  #For some reason, if we don't add -1, the labels will go right
                                          #I think it is because the method returns an extra pixel or
                                          #the place method doesn't count the border or smth
         current_y = i.winfo_y()
-        new_y = current_y + event.delta * scroll_sensibility
 
-        
+        first_label = modpack_labels[0]
+        last_label = modpack_labels[-1]
+
+        if event.delta > 0:
+            y_increment = 20 * scroll_sensibility
+            #Top limit for the labels:
+            #If the first label will go over the top when we add the scroll value, move it to the top and not more
+            if first_label.winfo_y() + y_increment > 0:
+                y_increment = -first_label.winfo_y() + 3  #The 3 (removed) is for the spacing between the frame and the label
+
+        elif event.delta < 0:
+            y_increment = -20 * scroll_sensibility
+            #Bottom limit for the labels:
+            #If the last label will go down the bottom when we add the scroll value, move it to the bottom and not more
+            if last_label.winfo_y() + y_increment < 412:
+                y_increment = 412 - last_label.winfo_y()
+
 
         i.place_forget()
-        i.place(x = current_x, y = new_y)
+        i.place(x = current_x, y = current_y + y_increment)
 
 
 create_button_panel_widgets()
