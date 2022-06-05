@@ -1,6 +1,6 @@
 from functools import partial
 from pickle import NONE
-from tkinter import Tk, Button, Label, Frame
+from tkinter import Canvas, Tk, Button, Label, Frame
 from PIL import ImageTk, Image
 import os
 from dark_title_bar import *
@@ -9,7 +9,7 @@ import settings as s
 
 root = Tk()
 root.title("ModPy Beta 1")
-root.geometry("350x500")  #Resolution of the window
+root.geometry("350x520")  #Resolution of the window
 root.resizable(False, False)  #Make it so you can't resize it
 
 #Change the theme to get different colors
@@ -92,17 +92,22 @@ def create_button_panel_widgets():
         bg = frame_bg_color,
         activebackground = button_active_bg_color,
         image = settings_cog,
-        command = lambda : s.open_settings_window(theme))
+        command = open_settings)
     settings_button.place(in_ = button_panel_frame, x = 283, y = widget_offset_y - 2)
 
 
 def create_modpack_list_structure():
     global modpack_list_frame
-    modpack_list_frame = Frame(root, width = 350 - widget_offset_x * 2, height = 422, bg = frame_bg_color, highlightbackground = "#afafaf", highlightthickness=1)
-    modpack_list_frame.place(in_ = root, x = widget_offset_x, y = widget_offset_y + 60 + widget_offset_y)
+    
+    modpack_list_frame = Frame(root, width = 350 - widget_offset_x * 2, height = 442, bg = frame_bg_color, highlightbackground = "#afafaf", highlightthickness=1)
+    modpack_list_frame.place(in_ = root, x = 6, y = 72)
 
-    #TODO: Add the code to create the modpack list
+    root.bind("<MouseWheel>", modpack_scroll)  #NOTE: In Linux, <MouseWheel> is <Button-4> and <Button-5>
 
+
+def open_settings():
+    destroy_modpack_buttons()
+    s.open_settings_window(theme)
 
 
 #This list holds the name of every modpack that has been saved by the user
@@ -122,6 +127,18 @@ def load_modpacks():
     modpacks_saved.append("Test 1 modpack")
     modpacks_saved.append("Test 2 modpack")
     modpacks_saved.append("Test 3 modpack")
+    modpacks_saved.append("Test 4 modpack")
+    modpacks_saved.append("Test 5 modpack")
+    modpacks_saved.append("Test 6 modpack")
+    modpacks_saved.append("Test 7 modpack")
+    modpacks_saved.append("Test 8 modpack")
+    modpacks_saved.append("Test 9 modpack")
+    modpacks_saved.append("Test 10 modpack")
+    modpacks_saved.append("Test 11 modpack")
+    modpacks_saved.append("Test 12 modpack")
+    modpacks_saved.append("Test 13 modpack")
+    modpacks_saved.append("Test 14 modpack")
+    modpacks_saved.append("Test 15 modpack")
     
 
 def show_modpacks():
@@ -192,7 +209,7 @@ def create_modpack_buttons(label, modpack, x):  #We use x as an argument because
         bg = button_bg_color,
         fg = "#ff0000",
         activebackground = button_active_bg_color,
-        activeforeground = button_active_foreground_color,
+        activeforeground = "#ff0000",
         image = virtualPixel, compound = "c",
         width = 18,
         height = 18,
@@ -207,6 +224,24 @@ def create_modpack_buttons(label, modpack, x):  #We use x as an argument because
 def destroy_modpack_buttons(x = 0):
     for button in created_modpack_buttons:
         button.destroy()
+
+
+def modpack_scroll(event):
+    print("Scrolled",event.delta)  #Debug
+
+    scroll_sensibility = 0.3
+
+    for i in modpack_labels:
+        current_x = i.winfo_x() - 1  #For some reason, if we don't add -1, the labels will go right
+                                         #I think it is because the method returns an extra pixel or
+                                         #the place method doesn't count the border or smth
+        current_y = i.winfo_y()
+        new_y = current_y + event.delta * scroll_sensibility
+
+        
+
+        i.place_forget()
+        i.place(x = current_x, y = new_y)
 
 
 create_button_panel_widgets()
