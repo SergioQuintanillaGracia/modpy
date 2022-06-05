@@ -12,10 +12,13 @@ root.title("ModPy Beta 1")
 root.geometry("350x520")  #Resolution of the window
 root.resizable(False, False)  #Make it so you can't resize it
 
-#Change the theme to get different colors
-theme = "discord dark"
-config_folder = "config/"
+modpack_folder = "modpacks/"
 mods_folder = str(os.getenv("APPDATA")) + "/.minecraft/mods/"
+
+#settings is a dictionary that contains every user setting and its value
+settings = s.get_user_settings()
+
+theme = settings["theme"]
 
 if theme == "light":
     print("Theme set to \"light\"")
@@ -107,8 +110,12 @@ def create_modpack_list_structure():
 
 
 def open_settings():
+    global settings
+
     destroy_modpack_buttons()
-    s.open_settings_window(theme)
+    s.set_up_window(theme)
+    
+    settings = s.get_user_settings
 
 
 #This list holds the name of every modpack that has been saved by the user
@@ -188,7 +195,7 @@ def create_modpack_buttons(label, modpack, x):  #We use x as an argument because
         image = virtualPixel, compound = "c",
         width = 45,
         height = 18,
-        command = lambda: print(f"{modpack} - install"))
+        command = lambda: print(settings))
     install_button.place(in_ = label, x = 168, y = 1)
 
     options_button = Button(label,

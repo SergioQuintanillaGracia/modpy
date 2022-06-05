@@ -1,0 +1,2 @@
+mods_folder = C:/Users/sergi/AppData/Roaming/.minecraft/mods
+theme = light
