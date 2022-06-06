@@ -1,6 +1,8 @@
 from pickle import NONE
 from tkinter import Checkbutton, Label, Button, Frame, Toplevel, filedialog, DISABLED, IntVar, messagebox
 from PIL import ImageTk, Image
+import os
+
 from dark_title_bar import *
 
 settings_file = "settings/settings.txt"
@@ -221,7 +223,7 @@ def get_user_settings():
 def get_default_settings():
     global settings, current_theme
     settings = {
-        "mods_folder":"C:/Users/sergi/AppData/Roaming/.minecraft/mods",  #TODO: Make this user independent
+        "mods_folder":str(os.getenv("APPDATA")) + "/.minecraft/mods/",  #TODO: Make this user independent
         "theme":"light",
         "install_confirmation":"0",
         "delete_confirmation":"1"

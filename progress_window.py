@@ -1,17 +1,17 @@
-from tkinter import ttk, Label, Button, Toplevel, HORIZONTAL
+from tkinter import ttk, Label, Button, Toplevel, HORIZONTAL, DISABLED, NORMAL
 from PIL import ImageTk, Image
 from dark_title_bar import *
 
-def open_window(theme, modpack_name):
+def open_window(window_title, theme, modpack_name):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
-    global root
+    global root, virtualPixel
 
     #Clear the theme_checkbuttons list in case it's the second time the user opens the settings window
     #and it contains things
 
     root = Toplevel()
-    root.title("Installing...")
+    root.title(window_title)
     root.geometry("250x150")
     root.resizable(False, False)
 
@@ -55,21 +55,79 @@ def open_window(theme, modpack_name):
     root.configure(bg = bg_color)
 
 
-    global progress_bar
-
     modpack_name_label = Label(root,
         text = modpack_name,
-        font = ("Arial", 12, "bold"),
-        anchor = "w",
+        font = ("Arial", 14, "bold"),
         bg = label_bg_color,
         fg = fg_color,
-        image = virtualPixel,
+        image = virtualPixel, compound = "c",
         width = 200,
         height = 22)
-    modpack_name_label.place(x = 25, y = 6)
+    modpack_name_label.place(in_ = root, x = 25, y = 7)
 
-    progress_bar = ttk.Progressbar(root, orient = HORIZONTAL, length = 230, mode = "determinate")
-    progress_bar.place(x = 10, y = 34)
+    global progressbar
+
+    progressbar = ttk.Progressbar(root, orient = HORIZONTAL, length = 230, mode = "determinate")
+    progressbar.place(x = 10, y = 41)
+
+    global progress_information_label, ok_button, close_modpy_button
+
+    progress_information_label = Label(root,
+        text = "Starting...",
+        font = ("Arial", 11),
+        anchor = "w",
+        bg = bg_color,
+        fg = fg_color,
+        image = virtualPixel, compound = "c",
+        width = 224,
+        height = 18)
+    progress_information_label.place(x = 10, y = 69)
+
+    ok_button = Button(root,
+        text = "OK",
+        font = ("Arial", 14),
+        bg = button_bg_color,
+        fg = fg_color,
+        activebackground = button_active_bg_color,
+        activeforeground = button_active_foreground_color,
+        image = virtualPixel, compound = "c",
+        width = 60,
+        height = 26,
+        state = DISABLED,
+        command = root.destroy)
+    ok_button.place(x = 19, y = 100)
+
+    close_modpy_button = Button(root,
+        text = "Close ModPy",
+        font = ("Arial", 14),
+        bg = button_bg_color,
+        fg = fg_color,
+        activebackground = button_active_bg_color,
+        activeforeground = button_active_foreground_color,
+        image = virtualPixel, compound = "c",
+        width = 130,
+        height = 26,
+        state = DISABLED,
+        command = exit)
+    close_modpy_button.place(x = 93, y = 100)
 
 
-    root.mainloop()
+def change_info_text(new_text):
+    global progress_information_label
+    progress_information_label["text"] = new_text
+
+
+def change_progress(new_progress):
+    global progressbar
+    progressbar["value"] = new_progress
+
+
+def end():
+    global progressbar, ok_button, close_modpy_button
+
+    progressbar["value"] = 100
+
+    root.protocol("WM_DELETE_WINDOW", root.destroy)
+    
+    ok_button["state"] = NORMAL
+    close_modpy_button["state"] = NORMAL

@@ -3,21 +3,21 @@ from pickle import NONE
 from tkinter import Tk, Button, Label, Frame
 from PIL import ImageTk, Image
 import os
+import shutil
 from dark_title_bar import *
 
 import settings as s
-import progress_window as progresswindow
+import progress_window as progressw
 
 root = Tk()
 root.title("ModPy Beta 1")
 root.geometry("350x520")  #Resolution of the window
 root.resizable(False, False)  #Make it so you can't resize it
 
-modpack_folder = "modpacks/"
-mods_folder = str(os.getenv("APPDATA")) + "/.minecraft/mods/"
-
 #settings is a dictionary that contains every user setting and its value
 settings = s.get_user_settings()
+
+mods_folder = settings["mods_folder"]
 
 theme = settings["theme"]
 
@@ -60,6 +60,14 @@ root.configure(bg = bg_color)
 #Frame offset variables are used to separate the frames from the edges of the window
 widget_offset_x = 6
 widget_offset_y = widget_offset_x
+
+
+def enable_closing():
+    root.protocol("WM_DELETE_WINDOW", root.destroy)
+
+
+def disable_closing():
+    root.protocol("WM_DELETE_WINDOW", lambda: print("Error: Not allowed to close the window"))
 
 
 def create_button_panel_widgets():
@@ -132,22 +140,9 @@ def load_modpacks():
     #This function will save every modpack that the user has saved in the modpacks_saved list.
     #At the moment, this is just a placeholder so I can continue working on the program.
     #This functionality will be implemented in the future.
-    modpacks_saved.append("Test 0 modpack")
-    modpacks_saved.append("Test 1 modpack")
-    modpacks_saved.append("Test 2 modpack")
-    modpacks_saved.append("Test 3 modpack")
-    modpacks_saved.append("Test 4 modpack")
-    modpacks_saved.append("Test 5 modpack")
-    modpacks_saved.append("Test 6 modpack")
-    modpacks_saved.append("Test 7 modpack")
-    modpacks_saved.append("Test 8 modpack")
-    modpacks_saved.append("Test 9 modpack")
-    modpacks_saved.append("Test 10 modpack")
-    modpacks_saved.append("Test 11 modpack")
-    modpacks_saved.append("Test 12 modpack")
-    modpacks_saved.append("Test 13 modpack")
-    modpacks_saved.append("Test 14 modpack")
-    modpacks_saved.append("Test 15 modpack")
+
+    for directory in os.listdir("modpacks"):
+        modpacks_saved.append(directory)
     
 
 def show_modpacks():
@@ -176,11 +171,11 @@ def show_modpacks():
         
         #We have to use partial() to call the function with arguments and not lambda because with lambda it won't work well,
         #it will use the last value of the arguments and not the one in the loop where the label is created
-        current_label.bind("<Button-1>", partial(create_modpack_buttons, current_label, str(current_position)))
+        current_label.bind("<Button-1>", partial(create_modpack_buttons, current_label, current_position))
 
 
 def create_modpack_buttons(label, modpack_index, x):  #We use x as an argument because partial() needs an extra argument
-    print("Modpack " + modpack_index)  #DEBUG LINE
+    print(f"Modpack {modpack_index}")  #DEBUG LINE
 
     #Delete every other button created next to a modpack name
     destroy_modpack_buttons()
@@ -274,11 +269,29 @@ def import_modpack():
 def install_modpack(modpack_index):
     #TODO: Create a file that creates a window with a progress bar
     #      This will be used for installing, exporting...
+    
+    #Disable closing
+    #disable_closing()
 
+    modpack_route = f"modpacks/{modpacks_saved[modpack_index]}/"
+    
     #Start progress window
-    progresswindow.open_window(theme, "modpack_name")
+    progressw.open_window("Installing...", theme, "Test name")
 
     #Delete the mods folder
+    try:
+        shutil.rmtree(mods_folder)
+    except:
+        print("Mods folder does not exist, avoiding deleting it...")
+
+    #Copy the files of the modpack to the mods folder
+    shutil.copytree(modpack_route, mods_folder)
+
+    #End progress window
+    progressw.end()
+
+    #Enable closing
+    enable_closing()
 
 
 create_button_panel_widgets()
