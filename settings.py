@@ -136,6 +136,11 @@ def set_up_window(theme):
     theme_checkbuttons.append(discord_dark_checkbutton)
     theme_checkbuttons.append(dark_mode_checkbutton)
 
+    global current_theme
+    current_theme = settings["theme"]
+    get_theme_button_variable(current_theme).set(1)
+
+
     #Confirmations UI part
 
     confirmation_checkbuttons_x_spacing = 23
@@ -184,7 +189,7 @@ def set_up_window(theme):
 
 
 def get_user_settings():
-    global settings
+    global settings, current_theme
     #settings will contain every user setting and its value
     settings = {}
 
@@ -203,13 +208,11 @@ def get_user_settings():
         get_default_settings()
         save_current_settings()
 
-    last_theme = settings["theme"]
-
     return settings
 
 
 def get_default_settings():
-    global settings
+    global settings, current_theme
     settings = {
         "mods_folder":"C:/Users/sergi/AppData/Roaming/.minecraft/mods",  #TODO: Make this user independent
         "theme":"light",
@@ -218,6 +221,7 @@ def get_default_settings():
     }
 
     current_theme = "light"
+    get_theme_button_variable(current_theme).set(1)
 
     print("Default settings applied")
     
@@ -245,23 +249,41 @@ def change_mods_folder_location():
     root.focus()
 
 
-def get_theme_button(theme):
-    global light_mode_checkbutton, discord_dark_checkbutton, dark_mode_checkbutton
-    if theme == "light":
-        return light_mode_checkbutton
-    if theme == "discord dark":
-        return discord_dark_checkbutton
-    if theme == "dark":
-        return dark_mode_checkbutton
+def get_theme_button_variable(theme):
+    #Given the name of a theme or a button object, return the variable of the theme
+    if theme == "light" or theme == light_mode_checkbutton:
+        return check_light_mode
+    if theme == "discord dark" or theme == discord_dark_checkbutton:
+        return check_discord_dark
+    if theme == "dark" or theme == dark_mode_checkbutton:
+        return check_dark_mode
+
+def get_theme_name(theme):
+    #Given the name of a variable or a button object, return the name of the theme
+    if theme == check_light_mode or theme == light_mode_checkbutton:
+        return "light"
+    if theme == check_discord_dark or theme == discord_dark_checkbutton:
+        return "discord dark"
+    if theme == check_dark_mode or theme == dark_mode_checkbutton:
+        return "dark"
 
 
 def change_mode():
     #Will manage the change between light, discord dark and dark modes
-    global check_light_mode, check_discord_dark, check_dark_mode, check_installing_modpack, check_deleting_modpack
-    global light_mode_checkbutton, discord_dark_checkbutton, dark_mode_checkbutton
-    
-    for i in theme_checkbuttons:
-        if i == current_theme:
-            pass
+    global current_theme
 
-    pass
+    get_theme_button_variable(current_theme).set(0)
+    
+    marked_theme_count = 0
+
+    for theme in theme_checkbuttons:
+        if get_theme_button_variable(theme).get() == 1:
+            marked_theme_count += 1
+            current_theme = get_theme_name(theme)
+            break
+
+    if marked_theme_count == 0:
+        get_theme_button_variable(current_theme).set(1)
+        return
+
+    #TODO: Save the theme and show a messagebox saying that the theme will be applied when you restart the program
