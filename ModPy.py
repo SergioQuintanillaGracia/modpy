@@ -4,6 +4,7 @@ from tkinter import Tk, Button, Label, Frame
 from PIL import ImageTk, Image
 import os
 import shutil
+from threading import Thread
 from dark_title_bar import *
 
 import settings as s
@@ -266,28 +267,37 @@ def import_modpack():
     pass
 
 
-def install_modpack(modpack_index):
-    #TODO: Create a file that creates a window with a progress bar
-    #      This will be used for installing, exporting...
-    
-    #Disable closing
-    #disable_closing()
-
-    modpack_route = f"modpacks/{modpacks_saved[modpack_index]}/"
-    
+def install_modpack(modpack_index):    
     #Start progress window
-    progressw.open_window("Installing...", theme, "Test name")
+    progressw.open_window("Installing...", theme, modpacks_saved[modpack_index])
+
+    #Create a thread to execute the actions over the progress window
+    #If we don't use a thread, the window will not open untill all the actions are finished
+    thread = Thread(target = _install_progress, args = (modpack_index,))
+    thread.start()
+
+
+def _install_progress(modpack_index):
+    modpack_route = f"modpacks/{modpacks_saved[modpack_index]}/"
+
+    #Disable closing
+    disable_closing()
 
     #Delete the mods folder
+    progressw.change_info_text("Deleting mods folder...")
     try:
         shutil.rmtree(mods_folder)
     except:
         print("Mods folder does not exist, avoiding deleting it...")
+    progressw.change_progress(10)
 
     #Copy the files of the modpack to the mods folder
+    progressw.change_info_text("Copying mods...")
     shutil.copytree(modpack_route, mods_folder)
+    progressw.change_progress(100)
 
     #End progress window
+    progressw.change_info_text("Finished installing!")
     progressw.end()
 
     #Enable closing

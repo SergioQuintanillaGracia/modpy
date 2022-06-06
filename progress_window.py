@@ -57,7 +57,7 @@ def open_window(window_title, theme, modpack_name):
 
     modpack_name_label = Label(root,
         text = modpack_name,
-        font = ("Arial", 14, "bold"),
+        font = ("Arial", 13, "bold"),
         bg = label_bg_color,
         fg = fg_color,
         image = virtualPixel, compound = "c",
