@@ -1,4 +1,4 @@
-mods_folder = 
+mods_folder = C:/Users/sergi/AppData/Roaming/.minecraft/mods
 theme = discord dark
 install_confirmation = 1
 delete_confirmation = 1

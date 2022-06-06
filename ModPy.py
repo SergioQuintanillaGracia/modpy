@@ -1,11 +1,12 @@
 from functools import partial
 from pickle import NONE
-from tkinter import Canvas, Tk, Button, Label, Frame
+from tkinter import Tk, Button, Label, Frame
 from PIL import ImageTk, Image
 import os
 from dark_title_bar import *
 
 import settings as s
+import progress_window as progresswindow
 
 root = Tk()
 root.title("ModPy Beta 1")
@@ -65,31 +66,31 @@ def create_button_panel_widgets():
     button_panel_frame = Frame(root, width = 350 - widget_offset_x * 2, height = 60, bg = frame_bg_color, highlightbackground = "#afafaf", highlightthickness=1)
     button_panel_frame.place(in_ = root, x = widget_offset_x, y = widget_offset_y)
 
-    add_modpack_button = Button(
-        text = "Add Modpack",
+    import_modpack_button = Button(button_panel_frame,
+        text = "Import",
         font = ("Arial", 14),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 141 - widget_offset_x * 4 + 2,
+        width = 103 - widget_offset_x * 4 + 2,
         height = 60 - widget_offset_x * 4 + 2,
-        command = print)
-    add_modpack_button.place(in_ = button_panel_frame, x = widget_offset_x, y = widget_offset_y)
+        command = import_modpack)
+    import_modpack_button.place(in_ = button_panel_frame, x = widget_offset_x, y = widget_offset_y)
 
-    import_from_file_button = Button(button_panel_frame,
-        text = "Import from file",
+    create_modpy_button = Button(
+        text = "Create modpy file",
         font = ("Arial", 14),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 152 - widget_offset_x * 4 + 2,
+        width = 193 - widget_offset_x * 4 + 2,
         height = 60 - widget_offset_x * 4 + 2,
         command = print)
-    import_from_file_button.place(in_ = button_panel_frame, x = 139, y = widget_offset_y)
+    create_modpy_button.place(in_ = button_panel_frame, x = 101, y = widget_offset_y)
 
     settings_button = Button(
         relief = "flat",
@@ -161,13 +162,13 @@ def show_modpacks():
         modpack_labels.append(
             Label(modpack_list_frame,
                 text = modpack,
-                font = ("Arial", 14),
+                font = ("Arial", 12, "bold"),
                 anchor = "w",
                 bg = label_bg_color,
                 fg = fg_color,
                 image = virtualPixel, compound = "c",
                 width = 318,
-                height = 26))
+                height = 22))
             
         current_label = modpack_labels[current_position]  #Current label, the one we have to pack and bind a key to
 
@@ -178,8 +179,8 @@ def show_modpacks():
         current_label.bind("<Button-1>", partial(create_modpack_buttons, current_label, str(current_position)))
 
 
-def create_modpack_buttons(label, modpack, x):  #We use x as an argument because partial() needs an extra argument
-    print("Modpack " + modpack)  #DEBUG LINE
+def create_modpack_buttons(label, modpack_index, x):  #We use x as an argument because partial() needs an extra argument
+    print("Modpack " + modpack_index)  #DEBUG LINE
 
     #Delete every other button created next to a modpack name
     destroy_modpack_buttons()
@@ -193,9 +194,9 @@ def create_modpack_buttons(label, modpack, x):  #We use x as an argument because
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
         width = 45,
-        height = 18,
-        command = lambda: print(settings))
-    install_button.place(in_ = label, x = 168, y = 1)
+        height = 14,
+        command = lambda: install_modpack(modpack_index))
+    install_button.place(in_ = label, x = 172, y = 1)
 
     options_button = Button(label,
         text = "Options",
@@ -206,9 +207,9 @@ def create_modpack_buttons(label, modpack, x):  #We use x as an argument because
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
         width = 58,
-        height = 18,
-        command = lambda: print(f"{modpack} - options"))
-    options_button.place(in_ = label, x = 224, y = 1)
+        height = 14,
+        command = lambda: print(f"{modpack_index} - options"))
+    options_button.place(in_ = label, x = 228, y = 1)
 
     delete_button = Button(label,
         text = "✖",
@@ -218,10 +219,10 @@ def create_modpack_buttons(label, modpack, x):  #We use x as an argument because
         activebackground = button_active_bg_color,
         activeforeground = "#ff0000",
         image = virtualPixel, compound = "c",
-        width = 18,
-        height = 18,
-        command = lambda: print(f"{modpack} - delete"))
-    delete_button.place(in_ = label, x = 293, y = 1)
+        width = 14,
+        height = 14,
+        command = lambda: print(f"{modpack_index} - delete"))
+    delete_button.place(in_ = label, x = 297, y = 1)
 
     created_modpack_buttons.append(install_button)
     created_modpack_buttons.append(options_button)
@@ -257,11 +258,27 @@ def modpack_scroll(event):
             #Bottom limit for the labels:
             #If the last label will go down the bottom when we add the scroll value, move it to the bottom and not more
             if last_label.winfo_y() + y_increment < 412:
-                y_increment = 412 - last_label.winfo_y()
+                y_increment = 417 - last_label.winfo_y()
 
 
         i.place_forget()
         i.place(x = current_x, y = current_y + y_increment)
+
+
+def import_modpack():
+    #Create another file that will create a window to import from a folder, .zip or .modpy
+    #The latter one is a file that contains the links where the mods need to be downloaded from
+    pass
+
+
+def install_modpack(modpack_index):
+    #TODO: Create a file that creates a window with a progress bar
+    #      This will be used for installing, exporting...
+
+    #Start progress window
+    progresswindow.open_window(theme, "modpack_name")
+
+    #Delete the mods folder
 
 
 create_button_panel_widgets()

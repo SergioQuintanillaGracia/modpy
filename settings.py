@@ -10,8 +10,6 @@ current_theme = NONE
 
 
 def set_up_window(theme):
-    #TODO: Move themes to another file that returns a tuple with the values of the variables,
-    #      then, in the other files, the variables are assigned the value of this tuple.
     global root, theme_checkbuttons
 
     #Clear the theme_checkbuttons list in case it's the second time the user opens the settings window
@@ -31,6 +29,9 @@ def set_up_window(theme):
     check_installing_modpack = IntVar()
     check_deleting_modpack = IntVar()
 
+
+    #TODO: Move themes to another file that returns a tuple with the values of the variables,
+    #      then, in the other files, the variables are assigned the value of this tuple.
     if theme == "light":
         print("Theme set to \"light\"")
         bg_color = "#f0f0f0"
@@ -108,7 +109,7 @@ def set_up_window(theme):
         selectcolor = button_active_bg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
-        command = change_mode)
+        command = change_theme)
     light_mode_checkbutton.place(x = theme_checkbuttons_x_spacing, y = 16)
 
     discord_dark_checkbutton = Checkbutton(theme_frame,
@@ -120,7 +121,7 @@ def set_up_window(theme):
         selectcolor = button_active_bg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
-        command = change_mode)
+        command = change_theme)
     discord_dark_checkbutton.place(x = theme_checkbuttons_x_spacing, y = 46)
 
     dark_mode_checkbutton = Checkbutton(theme_frame,
@@ -133,7 +134,7 @@ def set_up_window(theme):
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         state = DISABLED,
-        command = change_mode)
+        command = change_theme)
     dark_mode_checkbutton.place(x = theme_checkbuttons_x_spacing, y = 76)
 
     theme_checkbuttons.append(light_mode_checkbutton)
@@ -189,7 +190,6 @@ def set_up_window(theme):
         activeforeground = button_active_foreground_color,
         command = change_deleting_modpack_confirmation)
     deleting_modpack_checkbutton.place(x = confirmation_checkbuttons_x_spacing, y = 46)
-
 
 
     root.mainloop()
@@ -272,7 +272,7 @@ def get_theme_name(theme):
         return "dark"
 
 
-def change_mode():
+def change_theme():
     #Will manage the change between light, discord dark and dark modes
     global current_theme
 
