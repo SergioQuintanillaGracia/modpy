@@ -1,5 +1,5 @@
 from pickle import NONE
-from tkinter import Checkbutton, Label, Button, Frame, Toplevel, filedialog, DISABLED, IntVar
+from tkinter import Checkbutton, Label, Button, Frame, Toplevel, filedialog, DISABLED, IntVar, messagebox
 from PIL import ImageTk, Image
 from dark_title_bar import *
 
@@ -12,7 +12,11 @@ current_theme = NONE
 def set_up_window(theme):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
-    global root
+    global root, theme_checkbuttons
+
+    #Clear the theme_checkbuttons list in case it's the second time the user opens the settings window
+    #and it contains things
+    theme_checkbuttons.clear()
 
     root = Toplevel()
     root.title("Settings")
@@ -128,7 +132,7 @@ def set_up_window(theme):
         selectcolor = button_active_bg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
-        #state = DISABLED,                        #UNCOMMENT THIS LINE AS SOON AS POSSIBLE
+        state = DISABLED,
         command = change_mode)
     dark_mode_checkbutton.place(x = theme_checkbuttons_x_spacing, y = 76)
 
@@ -139,6 +143,9 @@ def set_up_window(theme):
     global current_theme
     current_theme = settings["theme"]
     get_theme_button_variable(current_theme).set(1)
+
+    check_installing_modpack.set(int(settings["install_confirmation"]))
+    check_deleting_modpack.set(int(settings["delete_confirmation"]))
 
 
     #Confirmations UI part
@@ -168,7 +175,7 @@ def set_up_window(theme):
         selectcolor = button_active_bg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
-        command = change_mode)
+        command = change_installing_modpack_confirmation)
     installing_modpack_checkbutton.place(x = confirmation_checkbuttons_x_spacing, y = 16)
 
     deleting_modpack_checkbutton = Checkbutton(confirmations_frame,
@@ -180,7 +187,7 @@ def set_up_window(theme):
         selectcolor = button_active_bg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
-        command = change_mode)
+        command = change_deleting_modpack_confirmation)
     deleting_modpack_checkbutton.place(x = confirmation_checkbuttons_x_spacing, y = 46)
 
 
@@ -216,12 +223,9 @@ def get_default_settings():
     settings = {
         "mods_folder":"C:/Users/sergi/AppData/Roaming/.minecraft/mods",  #TODO: Make this user independent
         "theme":"light",
-        "install_confirmation":"False",
-        "delete_confirmation":"True"
+        "install_confirmation":"0",
+        "delete_confirmation":"1"
     }
-
-    current_theme = "light"
-    get_theme_button_variable(current_theme).set(1)
 
     print("Default settings applied")
     
@@ -286,4 +290,18 @@ def change_mode():
         get_theme_button_variable(current_theme).set(1)
         return
 
-    #TODO: Save the theme and show a messagebox saying that the theme will be applied when you restart the program
+    #Save the new theme in settings
+    settings["theme"] = current_theme
+    save_current_settings()
+
+    messagebox.showinfo("Theme update", "The new theme will be applied when you restart ModPy.")
+
+
+def change_installing_modpack_confirmation():
+    settings["install_confirmation"] = check_installing_modpack.get()
+    save_current_settings()
+
+
+def change_deleting_modpack_confirmation():
+    settings["delete_confirmation"] = check_deleting_modpack.get()
+    save_current_settings()
