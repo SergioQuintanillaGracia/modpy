@@ -1,8 +1,12 @@
-from tkinter import Checkbutton, Label, Button, Frame, Toplevel, filedialog, DISABLED
+from pickle import NONE
+from tkinter import Checkbutton, Label, Button, Frame, Toplevel, filedialog, DISABLED, IntVar
 from PIL import ImageTk, Image
 from dark_title_bar import *
 
 settings_file = "settings/settings.txt"
+
+theme_checkbuttons = []
+current_theme = NONE
 
 
 def set_up_window(theme):
@@ -12,8 +16,16 @@ def set_up_window(theme):
 
     root = Toplevel()
     root.title("Settings")
-    root.geometry("250x250")
+    root.geometry("250x355")
     root.resizable(False, False)
+
+    #Variables for the checkbuttons
+    global check_light_mode, check_discord_dark, check_dark_mode, check_installing_modpack, check_deleting_modpack
+    check_light_mode = IntVar()
+    check_discord_dark = IntVar()
+    check_dark_mode = IntVar()
+    check_installing_modpack = IntVar()
+    check_deleting_modpack = IntVar()
 
     if theme == "light":
         print("Theme set to \"light\"")
@@ -49,6 +61,8 @@ def set_up_window(theme):
 
     root.configure(bg = bg_color)
 
+    #Change mods folder UI part
+
     change_mods_folder_location_button = Button(root,
         text = "Change mods\nfolder location",
         font = ("Arial", 14),
@@ -61,6 +75,9 @@ def set_up_window(theme):
         height = 50,
         command = change_mods_folder_location)
     change_mods_folder_location_button.place(x = 54, y = 13)
+
+    #Themes UI part
+    global light_mode_checkbutton, discord_dark_checkbutton, dark_mode_checkbutton
 
     theme_frame = Frame(root, width = 238, height = 130, bg = bg_color, highlightbackground = "#afafaf", highlightthickness = 1)
     theme_frame.place(x = 6, y = 94)
@@ -76,44 +93,92 @@ def set_up_window(theme):
         height = 16)
     theme_label.place(x = 87, y = 83)
 
-    theme_label_x_spacing = 45
+    theme_checkbuttons_x_spacing = 45
 
     light_mode_checkbutton = Checkbutton(theme_frame,
         text = "Light mode",
-        onvalue = 1, offvalue = 0,
         font = ("Arial", 14),
         bg = bg_color,
         fg = fg_color,
+        variable = check_light_mode,
         selectcolor = button_active_bg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         command = change_mode)
-    light_mode_checkbutton.place(x = theme_label_x_spacing, y = 16)
+    light_mode_checkbutton.place(x = theme_checkbuttons_x_spacing, y = 16)
 
     discord_dark_checkbutton = Checkbutton(theme_frame,
         text = "Discord dark",
-        onvalue = 1, offvalue = 0,
         font = ("Arial", 14),
         bg = bg_color,
         fg = fg_color,
+        variable = check_discord_dark,
         selectcolor = button_active_bg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         command = change_mode)
-    discord_dark_checkbutton.place(x = theme_label_x_spacing, y = 46)
+    discord_dark_checkbutton.place(x = theme_checkbuttons_x_spacing, y = 46)
 
     dark_mode_checkbutton = Checkbutton(theme_frame,
         text = "Dark mode",
-        onvalue = 1, offvalue = 0,
         font = ("Arial", 14),
         bg = bg_color,
         fg = fg_color,
+        variable = check_dark_mode,
         selectcolor = button_active_bg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
-        state = DISABLED,
+        #state = DISABLED,                        #UNCOMMENT THIS LINE AS SOON AS POSSIBLE
         command = change_mode)
-    dark_mode_checkbutton.place(x = theme_label_x_spacing, y = 76)
+    dark_mode_checkbutton.place(x = theme_checkbuttons_x_spacing, y = 76)
+
+    theme_checkbuttons.append(light_mode_checkbutton)
+    theme_checkbuttons.append(discord_dark_checkbutton)
+    theme_checkbuttons.append(dark_mode_checkbutton)
+
+    #Confirmations UI part
+
+    confirmation_checkbuttons_x_spacing = 23
+
+    confirmations_frame = Frame(root, width = 238, height = 100, bg = bg_color, highlightbackground = "#afafaf", highlightthickness = 1)
+    confirmations_frame.place(x = 6, y = 249)
+
+    confirmations_label = Label(root,
+        text = "Show confirmation when:",
+        font = ("Arial", 14),
+        bg = bg_color,
+        fg = fg_color,
+        relief = "groove",
+        image = virtualPixel, compound = "c",
+        width = 209,
+        height = 16)
+    confirmations_label.place(x = 17, y = 238)
+
+    installing_modpack_checkbutton = Checkbutton(confirmations_frame,
+        text = "Installing modpack",
+        font = ("Arial", 14),
+        bg = bg_color,
+        fg = fg_color,
+        variable = check_installing_modpack,
+        selectcolor = button_active_bg_color,
+        activebackground = button_active_bg_color,
+        activeforeground = button_active_foreground_color,
+        command = change_mode)
+    installing_modpack_checkbutton.place(x = confirmation_checkbuttons_x_spacing, y = 16)
+
+    deleting_modpack_checkbutton = Checkbutton(confirmations_frame,
+        text = "Deleting modpack",
+        font = ("Arial", 14),
+        bg = bg_color,
+        fg = fg_color,
+        variable = check_deleting_modpack,
+        selectcolor = button_active_bg_color,
+        activebackground = button_active_bg_color,
+        activeforeground = button_active_foreground_color,
+        command = change_mode)
+    deleting_modpack_checkbutton.place(x = confirmation_checkbuttons_x_spacing, y = 46)
+
+
 
     root.mainloop()
 
@@ -138,6 +203,8 @@ def get_user_settings():
         get_default_settings()
         save_current_settings()
 
+    last_theme = settings["theme"]
+
     return settings
 
 
@@ -145,8 +212,12 @@ def get_default_settings():
     global settings
     settings = {
         "mods_folder":"C:/Users/sergi/AppData/Roaming/.minecraft/mods",  #TODO: Make this user independent
-        "theme":"light"
+        "theme":"light",
+        "install_confirmation":"False",
+        "delete_confirmation":"True"
     }
+
+    current_theme = "light"
 
     print("Default settings applied")
     
@@ -166,12 +237,31 @@ def save_current_settings():
 
 def change_mods_folder_location():
     global settings, root
+
     new_mods_folder_location = filedialog.askdirectory()
     settings["mods_folder"] = new_mods_folder_location
+
     save_current_settings()
     root.focus()
 
 
+def get_theme_button(theme):
+    global light_mode_checkbutton, discord_dark_checkbutton, dark_mode_checkbutton
+    if theme == "light":
+        return light_mode_checkbutton
+    if theme == "discord dark":
+        return discord_dark_checkbutton
+    if theme == "dark":
+        return dark_mode_checkbutton
+
+
 def change_mode():
     #Will manage the change between light, discord dark and dark modes
+    global check_light_mode, check_discord_dark, check_dark_mode, check_installing_modpack, check_deleting_modpack
+    global light_mode_checkbutton, discord_dark_checkbutton, dark_mode_checkbutton
+    
+    for i in theme_checkbuttons:
+        if i == current_theme:
+            pass
+
     pass

@@ -1,2 +1,4 @@
 mods_folder = 
 theme = discord dark
+install_confirmation = 0
+delete_confirmation = 1
