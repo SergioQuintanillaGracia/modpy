@@ -4,6 +4,7 @@ from tkinter.messagebox import askokcancel, WARNING
 from PIL import ImageTk, Image
 import os
 import shutil
+import time
 from threading import Thread
 from dark_title_bar import *
 
@@ -283,7 +284,16 @@ def import_modpack():
     #The latter one is a file that contains the links where the mods need to be downloaded from
     import_func.open_window(theme, root)
 
-    #The import actions 
+    thread = Thread(target = import_modpack_check_for_refresh)
+    thread.start()
+
+
+def import_modpack_check_for_refresh():
+    while True:
+        if import_func.finished_importing == True:
+            refresh_modpack_list()
+            break
+        time.sleep(0.1)
 
 
 def install_modpack(modpack_index):

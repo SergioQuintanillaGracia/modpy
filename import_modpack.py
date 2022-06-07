@@ -1,14 +1,23 @@
-from tkinter import Label, Button, Toplevel, HORIZONTAL, DISABLED, NORMAL
+from pickle import NONE
+import shutil
+from tkinter import Label, Button, Toplevel, HORIZONTAL, DISABLED, NORMAL, filedialog
 from PIL import ImageTk, Image
+import os
+from threading import Thread
 from dark_title_bar import *
 
 import progress_window as progressw
 
 
-def open_window(theme, m_root):
+def open_window(theme_, m_root):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
     global root, main_root, virtualPixel, import_folder_pressed, import_zip_pressed, import_modpy_pressed
+    global theme, finished_importing
+
+    theme = theme_
+    
+    finished_importing = False
 
     main_root = m_root
     import_folder_pressed = False
@@ -113,7 +122,7 @@ def open_window(theme, m_root):
 
 def enable_closing():
     root.protocol("WM_DELETE_WINDOW", root.destroy)
-    main_root.protocol("WM_DELETE_WINDOW", root.destroy)
+    main_root.protocol("WM_DELETE_WINDOW", main_root.destroy)
 
 
 def disable_closing():
@@ -122,12 +131,46 @@ def disable_closing():
 
 
 def import_folder():
+    #Let the user choose the folder
+    modpack_route = filedialog.askdirectory()
+
+    new_modpack_route = f"modpacks/{os.path.basename(modpack_route)}"
+
+    #Start progress window
+    progressw.open_window("Importing modpack", theme, os.path.basename(modpack_route), (root,))
+
+    #Create a thread to execute the actions over the progress window
+    #If we don't use a thread, the window will not open until all the actions are finished
+    thread = Thread(target = _import_folder_actions, args = (modpack_route, new_modpack_route))
+    thread.start()
+
+
+def _import_folder_actions(modpack_route, new_modpack_route):
+    global finished_importing
+
+    #Disable closing
     disable_closing()
+
+    #Copy content of the modpack route to the modpacks folder
+    progressw.change_info_text("Copying mods...")
+    shutil.copytree(modpack_route, new_modpack_route)
+    progressw.change_progress(100)
+
+    #End progress window
+    progressw.change_info_text("Finished importing modpack")
+    progressw.end()
+
+    #Enable closing
+    enable_closing()
+
+    finished_importing = True
 
 
 def import_zip():
-    pass
+    #Disable closing
+    disable_closing()
 
 
 def import_modpy():
-    pass
+    #Disable closing
+    disable_closing()
