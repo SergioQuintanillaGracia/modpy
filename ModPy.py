@@ -1,5 +1,5 @@
 from functools import partial
-from tkinter import Tk, Button, Label, Frame
+from tkinter import DISABLED, Tk, Button, Label, Frame
 from tkinter.messagebox import askokcancel, WARNING
 from PIL import ImageTk, Image
 import os
@@ -101,6 +101,7 @@ def create_button_panel_widgets():
         image = virtualPixel, compound = "c",
         width = 193 - widget_offset_x * 4 + 2,
         height = 60 - widget_offset_x * 4 + 2,
+        state = DISABLED,
         command = print)
     create_modpy_button.place(in_ = button_panel_frame, x = 101, y = widget_offset_y)
 
@@ -218,6 +219,7 @@ def create_modpack_buttons(label, modpack_index, x):  #We use x as an argument b
         image = virtualPixel, compound = "c",
         width = 58,
         height = 14,
+        state = DISABLED,
         command = lambda: print(f"{modpack_index} - options"))
     options_button.place(in_ = label, x = 228, y = 1)
 
@@ -306,7 +308,7 @@ def install_modpack(modpack_index):
             return
 
     #Start progress window
-    progressw.open_window("Installing...", theme, modpacks_saved[modpack_index])
+    progressw.open_window("Installing...", theme, root, modpacks_saved[modpack_index])
 
     #Create a thread to execute the actions over the progress window
     #If we don't use a thread, the window will not open until all the actions are finished
@@ -353,7 +355,7 @@ def delete_modpack(modpack_index):
             return
 
     #Start progress window
-    progressw.open_window("Deleting...", theme, modpacks_saved[modpack_index])
+    progressw.open_window("Deleting...", theme, root, modpacks_saved[modpack_index])
 
     #Create a thread to execute the actions over the progress window
     #If we don't use a thread, the window will not open until all the actions are finished

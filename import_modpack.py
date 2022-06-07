@@ -103,6 +103,7 @@ def open_window(theme_, m_root):
         image = virtualPixel, compound = "c",
         width = 65,
         height = 26,
+        state = DISABLED,
         command = import_zip)
     zip_button.place(x = 84, y = 41)
 
@@ -116,6 +117,7 @@ def open_window(theme_, m_root):
         image = virtualPixel, compound = "c",
         width = 65,
         height = 26,
+        state = DISABLED,
         command = import_modpy)
     modpy_button.place(x = 162, y = 41)
 
@@ -137,7 +139,7 @@ def import_folder():
     new_modpack_route = f"modpacks/{os.path.basename(modpack_route)}"
 
     #Start progress window
-    progressw.open_window("Importing modpack", theme, os.path.basename(modpack_route), (root,))
+    progressw.open_window("Importing modpack", theme, main_root, os.path.basename(modpack_route), (root,))
 
     #Create a thread to execute the actions over the progress window
     #If we don't use a thread, the window will not open until all the actions are finished

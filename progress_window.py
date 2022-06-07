@@ -3,12 +3,13 @@ from PIL import ImageTk, Image
 from dark_title_bar import *
 
 
-def open_window(window_title, theme, modpack_name, windows_to_destroy = ()):
+def open_window(window_title, theme, main_root_, modpack_name, windows_to_destroy = ()):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
-    global root, virtualPixel, windows_to_destroy_list
+    global root, main_root, virtualPixel, windows_to_destroy_list
 
     windows_to_destroy_list = windows_to_destroy
+    main_root = main_root_
 
     #Clear the theme_checkbuttons list in case it's the second time the user opens the settings window
     #and it contains things
@@ -111,7 +112,7 @@ def open_window(window_title, theme, modpack_name, windows_to_destroy = ()):
         width = 130,
         height = 26,
         state = DISABLED,
-        command = exit)
+        command = main_root.destroy)
     close_modpy_button.place(x = 93, y = 100)
 
 
