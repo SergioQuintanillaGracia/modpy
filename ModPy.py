@@ -1,5 +1,4 @@
 from functools import partial
-from pickle import NONE
 from tkinter import Tk, Button, Label, Frame
 from tkinter.messagebox import askokcancel, WARNING
 from PIL import ImageTk, Image
@@ -8,8 +7,10 @@ import shutil
 from threading import Thread
 from dark_title_bar import *
 
+
 import settings as s
 import progress_window as progressw
+import import_modpack as import_func
 
 root = Tk()
 root.title("ModPy Beta 1")
@@ -280,7 +281,7 @@ def modpack_scroll(event):
 def import_modpack():
     #Create another file that will create a window to import from a folder, .zip or .modpy
     #The latter one is a file that contains the links where the mods need to be downloaded from
-    pass
+    import_func.open_window(theme)
 
 
 def install_modpack(modpack_index):

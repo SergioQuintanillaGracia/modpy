@@ -3,7 +3,7 @@ from PIL import ImageTk, Image
 from dark_title_bar import *
 
 
-def open_window(window_title, theme, modpack_name):
+def open_window(theme):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
     global root, virtualPixel
@@ -12,11 +12,9 @@ def open_window(window_title, theme, modpack_name):
     #and it contains things
 
     root = Toplevel()
-    root.title(window_title)
-    root.geometry("250x150")
+    root.title("Import modpack")
+    root.geometry("241x81")
     root.resizable(False, False)
-
-    root.protocol("WM_DELETE_WINDOW", lambda: print("Error: Not allowed to close the window"))
 
 
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
@@ -56,79 +54,51 @@ def open_window(window_title, theme, modpack_name):
     root.configure(bg = bg_color)
 
 
-    modpack_name_label = Label(root,
-        text = modpack_name,
-        font = ("Arial", 13, "bold"),
-        bg = label_bg_color,
-        fg = fg_color,
-        image = virtualPixel, compound = "c",
-        width = 200,
-        height = 22)
-    modpack_name_label.place(in_ = root, x = 25, y = 7)
-
-    global progressbar
-
-    progressbar = ttk.Progressbar(root, orient = HORIZONTAL, length = 230, mode = "determinate")
-    progressbar.place(x = 10, y = 41)
-
-    global progress_information_label, ok_button, close_modpy_button
-
-    progress_information_label = Label(root,
-        text = "Starting...",
-        font = ("Arial", 11),
-        anchor = "w",
+    import_from_label = Label(root,
+        text = "Import from:",
+        font = ("Arial", 14, "bold"),
         bg = bg_color,
         fg = fg_color,
         image = virtualPixel, compound = "c",
-        width = 224,
-        height = 18)
-    progress_information_label.place(x = 10, y = 69)
+        width = 120,
+        height = 22)
+    import_from_label.place(in_ = root, x = 60, y = 7)
 
-    ok_button = Button(root,
-        text = "OK",
+    folder_button = Button(root,
+        text = "Folder",
         font = ("Arial", 14),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 60,
+        width = 65,
         height = 26,
-        state = DISABLED,
-        command = root.destroy)
-    ok_button.place(x = 19, y = 100)
+        command = print)
+    folder_button.place(x = 6, y = 41)
 
-    close_modpy_button = Button(root,
-        text = "Close ModPy",
+    zip_button = Button(root,
+        text = ".zip",
         font = ("Arial", 14),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 130,
+        width = 65,
         height = 26,
-        state = DISABLED,
-        command = exit)
-    close_modpy_button.place(x = 93, y = 100)
+        command = print)
+    zip_button.place(x = 84, y = 41)
 
-
-def change_info_text(new_text):
-    global progress_information_label
-    progress_information_label["text"] = new_text
-
-
-def change_progress(new_progress):
-    global progressbar
-    progressbar["value"] = new_progress
-
-
-def end():
-    global progressbar, ok_button, close_modpy_button
-
-    progressbar["value"] = 100
-
-    root.protocol("WM_DELETE_WINDOW", root.destroy)
-    
-    ok_button["state"] = NORMAL
-    close_modpy_button["state"] = NORMAL
+    modpy_button = Button(root,
+        text = ".modpy",
+        font = ("Arial", 14),
+        bg = button_bg_color,
+        fg = fg_color,
+        activebackground = button_active_bg_color,
+        activeforeground = button_active_foreground_color,
+        image = virtualPixel, compound = "c",
+        width = 65,
+        height = 26,
+        command = print)
+    modpy_button.place(x = 162, y = 41)
