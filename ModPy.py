@@ -281,7 +281,9 @@ def modpack_scroll(event):
 def import_modpack():
     #Create another file that will create a window to import from a folder, .zip or .modpy
     #The latter one is a file that contains the links where the mods need to be downloaded from
-    import_func.open_window(theme)
+    import_func.open_window(theme, root)
+
+    #The import actions 
 
 
 def install_modpack(modpack_index):

@@ -1,12 +1,19 @@
-from tkinter import ttk, Label, Button, Toplevel, HORIZONTAL, DISABLED, NORMAL
+from tkinter import Label, Button, Toplevel, HORIZONTAL, DISABLED, NORMAL
 from PIL import ImageTk, Image
 from dark_title_bar import *
 
+import progress_window as progressw
 
-def open_window(theme):
+
+def open_window(theme, m_root):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
-    global root, virtualPixel
+    global root, main_root, virtualPixel, import_folder_pressed, import_zip_pressed, import_modpy_pressed
+
+    main_root = m_root
+    import_folder_pressed = False
+    import_zip_pressed = False
+    import_modpy_pressed = False
 
     #Clear the theme_checkbuttons list in case it's the second time the user opens the settings window
     #and it contains things
@@ -74,7 +81,7 @@ def open_window(theme):
         image = virtualPixel, compound = "c",
         width = 65,
         height = 26,
-        command = print)
+        command = import_folder)
     folder_button.place(x = 6, y = 41)
 
     zip_button = Button(root,
@@ -87,7 +94,7 @@ def open_window(theme):
         image = virtualPixel, compound = "c",
         width = 65,
         height = 26,
-        command = print)
+        command = import_zip)
     zip_button.place(x = 84, y = 41)
 
     modpy_button = Button(root,
@@ -100,5 +107,27 @@ def open_window(theme):
         image = virtualPixel, compound = "c",
         width = 65,
         height = 26,
-        command = print)
+        command = import_modpy)
     modpy_button.place(x = 162, y = 41)
+
+
+def enable_closing():
+    root.protocol("WM_DELETE_WINDOW", root.destroy)
+    main_root.protocol("WM_DELETE_WINDOW", root.destroy)
+
+
+def disable_closing():
+    root.protocol("WM_DELETE_WINDOW", lambda: print("Error: Not allowed to close the window"))
+    main_root.protocol("WM_DELETE_WINDOW", lambda: print("Error: Not allowed to close the window"))
+
+
+def import_folder():
+    disable_closing()
+
+
+def import_zip():
+    pass
+
+
+def import_modpy():
+    pass
