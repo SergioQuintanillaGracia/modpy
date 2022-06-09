@@ -8,10 +8,10 @@ import time
 from threading import Thread
 from dark_title_bar import *
 
-
 import settings as s
 import progress_window as progressw
-import import_modpack as import_func
+import modpack_actions as modpack_act
+
 
 root = Tk()
 root.title("ModPy Beta 1")
@@ -206,7 +206,7 @@ def create_modpack_buttons(label, modpack_index, x):  #We use x as an argument b
         image = virtualPixel, compound = "c",
         width = 45,
         height = 14,
-        command = lambda: install_modpack(modpack_index))
+        command = lambda: modpack_act.install_modpack(modpack_index, theme, root, settings, modpacks_saved, mods_folder))
     install_button.place(in_ = label, x = 172, y = 1)
 
     options_button = Button(label,
@@ -284,7 +284,7 @@ def modpack_scroll(event):
 def import_modpack():
     #Create another file that will create a window to import from a folder, .zip or .modpy
     #The latter one is a file that contains the links where the mods need to be downloaded from
-    import_func.open_window(theme, root)
+    modpack_act.open_import_window(theme, root)
 
     thread = Thread(target = import_modpack_check_for_refresh)
     thread.start()
@@ -292,57 +292,10 @@ def import_modpack():
 
 def import_modpack_check_for_refresh():
     while True:
-        if import_func.finished_importing == True:
+        if modpack_act.finished_importing == True:
             refresh_modpack_list()
             break
         time.sleep(0.1)
-
-
-def install_modpack(modpack_index):
-    if int(settings["install_confirmation"]) == 1:
-        user_has_confirmed = askokcancel("Modpack installation",
-        "You are about to install a modpack.\nYour current mods will be deleted.\nDo you want to continue?",
-        icon = WARNING)
-    
-        if not user_has_confirmed:
-            return
-
-    #Start progress window
-    progressw.open_window("Installing...", theme, root, modpacks_saved[modpack_index])
-
-    #Create a thread to execute the actions over the progress window
-    #If we don't use a thread, the window will not open until all the actions are finished
-    thread = Thread(target = _install_actions, args = (modpack_index,))
-    thread.start()
-
-
-def _install_actions(modpack_index):
-    modpack_route = f"modpacks/{modpacks_saved[modpack_index]}/"
-
-    #Disable closing
-    disable_closing()
-
-    #Delete the mods folder
-    progressw.change_info_text("Deleting mods folder...")
-    try:
-        shutil.rmtree(mods_folder)
-    except:
-        print("Mods folder does not exist, avoiding deleting it...")
-    progressw.change_progress(10)
-
-    #Copy the files of the modpack to the mods folder
-    progressw.change_info_text("Copying mods...")
-    shutil.copytree(modpack_route, mods_folder)
-    progressw.change_progress(100)
-
-    #End progress window
-    progressw.change_info_text("Finished installing modpack")
-    progressw.end()
-
-    #Enable closing
-    enable_closing()
-
-    print("Finished installing modpack")
 
 
 def delete_modpack(modpack_index):

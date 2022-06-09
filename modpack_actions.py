@@ -1,6 +1,8 @@
+from logging import WARNING
 from pickle import NONE
 import shutil
 from tkinter import Label, Button, Toplevel, HORIZONTAL, DISABLED, NORMAL, filedialog
+from tkinter.messagebox import askokcancel
 from PIL import ImageTk, Image
 import os
 from threading import Thread
@@ -9,7 +11,7 @@ from dark_title_bar import *
 import progress_window as progressw
 
 
-def open_window(theme_, m_root):
+def open_import_window(theme_, m_root):
     #TODO: Move themes to another file that returns a tuple with the values of the variables,
     #      then, in the other files, the variables are assigned the value of this tuple.
     global root, main_root, virtualPixel, import_folder_pressed, import_zip_pressed, import_modpy_pressed
@@ -122,19 +124,77 @@ def open_window(theme_, m_root):
     modpy_button.place(x = 162, y = 41)
 
 
+def install_modpack(modpack_index, theme, root, settings, modpacks_saved, mods_folder):
+    if int(settings["install_confirmation"]) == 1:
+        user_has_confirmed = askokcancel("Modpack installation",
+        "You are about to install a modpack.\nYour current mods will be deleted.\nDo you want to continue?",
+        icon = WARNING)
+    
+        if not user_has_confirmed:
+            return
+
+    #Start progress window
+    progressw.open_window("Installing...", theme, root, modpacks_saved[modpack_index])
+
+    #Create a thread to execute the actions over the progress window
+    #If we don't use a thread, the window will not open until all the actions are finished
+    thread = Thread(target = _install_actions, args = (modpack_index, modpacks_saved, mods_folder))
+    thread.start()
+
+
+def _install_actions(modpack_index, modpacks_saved, mods_folder):
+    modpack_route = f"modpacks/{modpacks_saved[modpack_index]}/"
+
+    #Disable closing
+    disable_closing()
+
+    #Delete the mods folder
+    progressw.change_info_text("Deleting mods folder...")
+    try:
+        shutil.rmtree(mods_folder)
+    except:
+        print("Mods folder does not exist, avoiding deleting it...")
+    progressw.change_progress(10)
+
+    #Copy the files of the modpack to the mods folder
+    progressw.change_info_text("Copying mods...")
+    shutil.copytree(modpack_route, mods_folder)
+    progressw.change_progress(100)
+
+    #End progress window
+    progressw.change_info_text("Finished installing modpack")
+    progressw.end()
+
+    #Enable closing
+    enable_closing()
+
+    print("Finished installing modpack")
+
+
 def enable_closing():
-    root.protocol("WM_DELETE_WINDOW", root.destroy)
-    main_root.protocol("WM_DELETE_WINDOW", main_root.destroy)
+    try:
+        root.protocol("WM_DELETE_WINDOW", root.destroy)
+    except: pass
+    try:
+        main_root.protocol("WM_DELETE_WINDOW", main_root.destroy)
+    except: pass
 
 
 def disable_closing():
-    root.protocol("WM_DELETE_WINDOW", lambda: print("Error: Not allowed to close the window"))
-    main_root.protocol("WM_DELETE_WINDOW", lambda: print("Error: Not allowed to close the window"))
+    try:
+        root.protocol("WM_DELETE_WINDOW", lambda: print("Error: Not allowed to close the window"))
+    except: pass
+    try:
+        main_root.protocol("WM_DELETE_WINDOW", lambda: print("Error: Not allowed to close the window"))
+    except: pass
 
 
 def import_folder():
     #Let the user choose the folder
     modpack_route = filedialog.askdirectory()
+    
+    if modpack_route == "":
+        return
 
     new_modpack_route = f"modpacks/{os.path.basename(modpack_route)}"
 
