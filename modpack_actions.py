@@ -1,8 +1,6 @@
-from logging import WARNING
-from pickle import NONE
 import shutil
-from tkinter import Label, Button, Toplevel, HORIZONTAL, DISABLED, NORMAL, filedialog
-from tkinter.messagebox import askokcancel
+from tkinter import Label, Button, Toplevel, DISABLED, filedialog
+from tkinter.messagebox import askokcancel, WARNING
 from PIL import ImageTk, Image
 import os
 from threading import Thread
@@ -168,7 +166,45 @@ def _install_actions(modpack_index, modpacks_saved, mods_folder):
     #Enable closing
     enable_closing()
 
-    print("Finished installing modpack")
+
+def delete_modpack(modpack_index, theme, root, settings, modpacks_saved):
+    if int(settings["delete_confirmation"]) == 1:
+        user_has_confirmed = askokcancel("Modpack deletion",
+        "You are about to delete a modpack.\nDo you want to continue?",
+        icon = WARNING)
+    
+        if not user_has_confirmed:
+            return
+
+    #Start progress window
+    progressw.open_window("Deleting...", theme, root, modpacks_saved[modpack_index])
+
+    #Create a thread to execute the actions over the progress window
+    #If we don't use a thread, the window will not open until all the actions are finished
+    thread = Thread(target = _delete_actions, args = (modpack_index, modpacks_saved))
+    thread.start()
+
+
+def _delete_actions(modpack_index, modpacks_saved):
+    modpack_route = f"modpacks/{modpacks_saved[modpack_index]}/"
+
+    #Disable closing
+    disable_closing()
+
+    #Delete the modpack folder
+    progressw.change_info_text("Removing modpack...")
+    shutil.rmtree(modpack_route)
+    progressw.change_progress(100)
+
+    #End progress window
+    progressw.change_info_text("Finished deleting modpack")
+    progressw.end()
+
+    #Enable closing
+    enable_closing()
+
+    #Refresh the modpack list (TODO)
+    #refresh_modpack_list()
 
 
 def enable_closing():

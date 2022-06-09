@@ -233,7 +233,7 @@ def create_modpack_buttons(label, modpack_index, x):  #We use x as an argument b
         image = virtualPixel, compound = "c",
         width = 14,
         height = 14,
-        command = lambda: delete_modpack(modpack_index))
+        command = lambda: modpack_act.delete_modpack(modpack_index, theme, root, settings, modpacks_saved))
     delete_button.place(in_ = label, x = 297, y = 1)
 
     created_modpack_buttons.append(install_button)
@@ -296,46 +296,6 @@ def import_modpack_check_for_refresh():
             refresh_modpack_list()
             break
         time.sleep(0.1)
-
-
-def delete_modpack(modpack_index):
-    if int(settings["delete_confirmation"]) == 1:
-        user_has_confirmed = askokcancel("Modpack deletion",
-        "You are about to delete a modpack.\nDo you want to continue?",
-        icon = WARNING)
-    
-        if not user_has_confirmed:
-            return
-
-    #Start progress window
-    progressw.open_window("Deleting...", theme, root, modpacks_saved[modpack_index])
-
-    #Create a thread to execute the actions over the progress window
-    #If we don't use a thread, the window will not open until all the actions are finished
-    thread = Thread(target = _delete_actions, args = (modpack_index,))
-    thread.start()
-
-
-def _delete_actions(modpack_index):
-    modpack_route = f"modpacks/{modpacks_saved[modpack_index]}/"
-
-    #Disable closing
-    disable_closing()
-
-    #Delete the modpack folder
-    progressw.change_info_text("Removing modpack...")
-    shutil.rmtree(modpack_route)
-    progressw.change_progress(100)
-
-    #End progress window
-    progressw.change_info_text("Finished deleting modpack")
-    progressw.end()
-
-    #Enable closing
-    enable_closing()
-
-    #Refresh the modpack list (TODO)
-    refresh_modpack_list()
 
 
 create_button_panel_widgets()
