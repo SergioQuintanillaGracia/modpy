@@ -1,8 +1,6 @@
-from logging import WARNING
-from pickle import NONE
 import shutil
-from tkinter import Label, Button, Toplevel, HORIZONTAL, DISABLED, NORMAL, filedialog
-from tkinter.messagebox import askokcancel
+from tkinter import Label, Button, Toplevel, DISABLED, filedialog
+from tkinter.messagebox import askokcancel, WARNING
 from PIL import ImageTk, Image
 import os
 from threading import Thread

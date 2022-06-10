@@ -1,4 +1,4 @@
 mods_folder = C:/Users/sergio/AppData/Roaming/.minecraft/mods
 theme = light
-install_confirmation = 1
+install_confirmation = 0
 delete_confirmation = 1
