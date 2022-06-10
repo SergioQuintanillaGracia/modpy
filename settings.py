@@ -5,7 +5,9 @@ import os
 
 from dark_title_bar import *
 
+settings = {}
 settings_file = "settings/settings.txt"
+settings_count = 4
 
 theme_checkbuttons = []
 current_theme = NONE
@@ -198,7 +200,7 @@ def set_up_window(theme):
 
 
 def get_user_settings():
-    global settings, current_theme
+    global settings, current_theme, settings_count
     #settings will contain every user setting and its value
     settings = {}
 
@@ -210,8 +212,18 @@ def get_user_settings():
             #If, by new line errors, various lines are together, raise an error and load the default settings
             if len(key_value) != 2:
                 raise
+                
+            key_value[1] = key_value[1].strip()  #We use strip to remove any \n characters
 
-            settings[key_value[0]] = key_value[1].strip()  #We use strip to remove any \n characters
+            settings[key_value[0]] = key_value[1]
+
+            #If the key or the value is a void string, raise an error
+            if key_value[0] == "" or key_value[1] == "":
+                raise
+
+        #If there is not the correct ammount of settings lines, raise an error
+        if len(settings) != settings_count:
+            raise
 
     except:
         get_default_settings()
@@ -250,7 +262,7 @@ def change_mods_folder_location():
 
     new_mods_folder_location = filedialog.askdirectory()
     settings["mods_folder"] = new_mods_folder_location
-
+    print(new_mods_folder_location)
     save_current_settings()
     root.focus()
 

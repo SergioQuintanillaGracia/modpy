@@ -14,16 +14,14 @@ import modpack_actions as modpack_act
 
 
 root = Tk()
-root.title("ModPy Beta 1")
+root.title("ModPy Beta 1.1")
 root.geometry("350x520")  #Resolution of the window
 root.resizable(False, False)  #Make it so you can't resize it
 
-#settings is a dictionary that contains every user setting and its value
-settings = s.get_user_settings()
+s.get_user_settings()
 
-mods_folder = settings["mods_folder"]
-
-theme = settings["theme"]
+mods_folder = s.settings["mods_folder"]
+theme = s.settings["theme"]
 
 if theme == "light":
     print("Theme set to \"light\"")
@@ -206,7 +204,7 @@ def create_modpack_buttons(label, modpack_index, x):  #We use x as an argument b
         image = virtualPixel, compound = "c",
         width = 45,
         height = 14,
-        command = lambda: modpack_act.install_modpack(modpack_index, theme, root, settings, modpacks_saved, mods_folder))
+        command = lambda: modpack_act.install_modpack(modpack_index, theme, root, modpacks_saved))
     install_button.place(in_ = label, x = 172, y = 1)
 
     options_button = Button(label,
@@ -284,6 +282,7 @@ def modpack_scroll(event):
 def import_modpack():
     #Create another file that will create a window to import from a folder, .zip or .modpy
     #The latter one is a file that contains the links where the mods need to be downloaded from
+    destroy_modpack_buttons()
     modpack_act.open_import_window(theme, root)
 
     thread = Thread(target = import_modpack_check_for_refresh)
@@ -299,7 +298,7 @@ def import_modpack_check_for_refresh():
 
 
 def delete_modpack(modpack_index):
-    if int(settings["delete_confirmation"]) == 1:
+    if int(s.settings["delete_confirmation"]) == 1:
         user_has_confirmed = askokcancel("Modpack deletion",
         "You are about to delete a modpack.\nDo you want to continue?",
         icon = WARNING)

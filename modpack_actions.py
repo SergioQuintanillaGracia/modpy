@@ -7,6 +7,7 @@ from threading import Thread
 from dark_title_bar import *
 
 import progress_window as progressw
+import settings as s
 
 
 def open_import_window(theme_, m_root):
@@ -122,8 +123,8 @@ def open_import_window(theme_, m_root):
     modpy_button.place(x = 162, y = 41)
 
 
-def install_modpack(modpack_index, theme, root, settings, modpacks_saved, mods_folder):
-    if int(settings["install_confirmation"]) == 1:
+def install_modpack(modpack_index, theme, root, modpacks_saved):
+    if int(s.settings["install_confirmation"]) == 1:
         user_has_confirmed = askokcancel("Modpack installation",
         "You are about to install a modpack.\nYour current mods will be deleted.\nDo you want to continue?",
         icon = WARNING)
@@ -136,11 +137,11 @@ def install_modpack(modpack_index, theme, root, settings, modpacks_saved, mods_f
 
     #Create a thread to execute the actions over the progress window
     #If we don't use a thread, the window will not open until all the actions are finished
-    thread = Thread(target = _install_actions, args = (modpack_index, modpacks_saved, mods_folder))
+    thread = Thread(target = _install_actions, args = (modpack_index, modpacks_saved))
     thread.start()
 
 
-def _install_actions(modpack_index, modpacks_saved, mods_folder):
+def _install_actions(modpack_index, modpacks_saved):
     modpack_route = f"modpacks/{modpacks_saved[modpack_index]}/"
 
     #Disable closing
@@ -149,14 +150,14 @@ def _install_actions(modpack_index, modpacks_saved, mods_folder):
     #Delete the mods folder
     progressw.change_info_text("Deleting mods folder...")
     try:
-        shutil.rmtree(mods_folder)
+        shutil.rmtree(s.settings["mods_folder"])
     except:
         print("Mods folder does not exist, avoiding deleting it...")
     progressw.change_progress(10)
 
     #Copy the files of the modpack to the mods folder
     progressw.change_info_text("Copying mods...")
-    shutil.copytree(modpack_route, mods_folder)
+    shutil.copytree(modpack_route, s.settings["mods_folder"])
     progressw.change_progress(100)
 
     #End progress window
@@ -227,8 +228,42 @@ def _import_folder_actions(modpack_route, new_modpack_route):
 
 
 def import_zip():
+    #Let the user choose the folder
+    modpack_route = filedialog.askopenfile()
+    
+    if modpack_route == "":
+        return
+
+    new_modpack_route = f"modpacks/{os.path.basename(modpack_route)}"
+
+    #Start progress window
+    progressw.open_window("Importing modpack", theme, main_root, os.path.basename(modpack_route), (root,))
+
+    #Create a thread to execute the actions over the progress window
+    #If we don't use a thread, the window will not open until all the actions are finished
+    thread = Thread(target = _import_folder_actions, args = (modpack_route, new_modpack_route))
+    thread.start()
+
+
+def _import_zip_actions(modpack_route, new_modpack_route):
+    global finished_importing
+
     #Disable closing
     disable_closing()
+
+    #Copy content of the modpack route to the modpacks folder
+    progressw.change_info_text("Copying mods...")
+    shutil.copytree(modpack_route, new_modpack_route)
+    progressw.change_progress(100)
+
+    #End progress window
+    progressw.change_info_text("Finished importing modpack")
+    progressw.end()
+
+    #Enable closing
+    enable_closing()
+
+    finished_importing = True
 
 
 def import_modpy():
