@@ -74,14 +74,14 @@ def set_up_window(theme):
 
     change_mods_folder_location_button = Button(root,
         text = "Change mods\nfolder location",
-        font = ("Arial", 14),
+        font = ("Arial", 12),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 135,
-        height = 50,
+        width = 109,
+        height = 41,
         command = change_mods_folder_location)
     change_mods_folder_location_button.place(x = 54, y = 13)
 

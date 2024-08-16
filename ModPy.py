@@ -84,8 +84,8 @@ def create_button_panel_widgets():
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 103 - widget_offset_x * 4 + 2,
-        height = 60 - widget_offset_x * 4 + 2,
+        width = 103 - widget_offset_x * 8 + 2,
+        height = 60 - widget_offset_x * 5 + 2,
         command = import_modpack)
     import_modpack_button.place(in_ = button_panel_frame, x = widget_offset_x, y = widget_offset_y)
 
@@ -97,8 +97,8 @@ def create_button_panel_widgets():
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 193 - widget_offset_x * 4 + 2,
-        height = 60 - widget_offset_x * 4 + 2,
+        width = 193 - widget_offset_x * 8 + 2,
+        height = 60 - widget_offset_x * 5 + 2,
         state = DISABLED,
         command = print)
     create_modpy_button.place(in_ = button_panel_frame, x = 101, y = widget_offset_y)
@@ -196,43 +196,43 @@ def create_modpack_buttons(label, modpack_index, x):  #We use x as an argument b
 
     install_button = Button(label,
         text = "Install",
-        font = ("Arial", 12, "bold"),
+        font = ("Arial", 10, "bold"),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 45,
-        height = 14,
+        width = 20,
+        height = 6,
         command = lambda: modpack_act.install_modpack(modpack_index, theme, root, modpacks_saved))
-    install_button.place(in_ = label, x = 172, y = 1)
+    install_button.place(in_ = label, x = 162, y = 1)
 
     options_button = Button(label,
         text = "Options",
-        font = ("Arial", 12, "bold"),
+        font = ("Arial", 10, "bold"),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 58,
-        height = 14,
+        width = 28,
+        height = 6,
         state = DISABLED,
         command = lambda: print(f"{modpack_index} - options"))
-    options_button.place(in_ = label, x = 228, y = 1)
+    options_button.place(in_ = label, x = 218, y = 1)
 
     delete_button = Button(label,
         text = "✖",
-        font = ("Arial", 19),
+        font = ("Arial", 11),
         bg = button_bg_color,
         fg = "#ff0000",
         activebackground = button_active_bg_color,
         activeforeground = "#ff0000",
         image = virtualPixel, compound = "c",
-        width = 14,
-        height = 14,
+        width = 6,
+        height = 6,
         command = lambda: delete_modpack(modpack_index))
-    delete_button.place(in_ = label, x = 297, y = 1)
+    delete_button.place(in_ = label, x = 282, y = 1)
 
     created_modpack_buttons.append(install_button)
     created_modpack_buttons.append(options_button)

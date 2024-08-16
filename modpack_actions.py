@@ -73,7 +73,7 @@ def open_import_window(theme_, m_root):
 
     import_from_label = Label(root,
         text = "Import from:",
-        font = ("Arial", 14, "bold"),
+        font = ("Arial", 12, "bold"),
         bg = bg_color,
         fg = fg_color,
         image = virtualPixel, compound = "c",
@@ -83,27 +83,27 @@ def open_import_window(theme_, m_root):
 
     folder_button = Button(root,
         text = "Folder",
-        font = ("Arial", 14),
+        font = ("Arial", 12),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 65,
-        height = 26,
+        width = 41,
+        height = 21,
         command = import_folder)
     folder_button.place(x = 6, y = 41)
 
     zip_button = Button(root,
         text = ".zip",
-        font = ("Arial", 14),
+        font = ("Arial", 12),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 65,
-        height = 26,
+        width = 41,
+        height = 21,
         state = DISABLED,
         command = import_zip)
     zip_button.place(x = 84, y = 41)
@@ -116,8 +116,8 @@ def open_import_window(theme_, m_root):
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 65,
-        height = 26,
+        width = 41,
+        height = 21,
         state = DISABLED,
         command = import_modpy)
     modpy_button.place(x = 162, y = 41)

@@ -89,13 +89,13 @@ def open_window(window_title, theme, main_root_, modpack_name, windows_to_destro
 
     ok_button = Button(root,
         text = "OK",
-        font = ("Arial", 14),
+        font = ("Arial", 12),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 60,
+        width = 36,
         height = 26,
         state = DISABLED,
         command = ok_button_actions)
@@ -103,13 +103,13 @@ def open_window(window_title, theme, main_root_, modpack_name, windows_to_destro
 
     close_modpy_button = Button(root,
         text = "Close ModPy",
-        font = ("Arial", 14),
+        font = ("Arial", 12),
         bg = button_bg_color,
         fg = fg_color,
         activebackground = button_active_bg_color,
         activeforeground = button_active_foreground_color,
         image = virtualPixel, compound = "c",
-        width = 130,
+        width = 106,
         height = 26,
         state = DISABLED,
         command = main_root.destroy)
